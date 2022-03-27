@@ -1,4 +1,4 @@
-const {getSaute, sendClientResponse} = require("./sautes")
+const {getSaute, sendClientResponse} = require("./HotTakes")
 
 function likeSaute(req, res) {
   const { like, userId } = req.body
