@@ -1,4 +1,5 @@
-const { User } = require("../mongo")
+//Importation des packages
+const { User } = require("../models/users")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 

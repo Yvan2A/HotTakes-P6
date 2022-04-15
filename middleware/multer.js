@@ -1,4 +1,12 @@
+//Importation du package Multer
 const multer = require("multer")
+
+//type de fichier accepté
+const MIME_TYPES = {
+  'image/jpg': 'jpg',
+  'image/jpeg': 'jpg',
+  'image/png': 'png'
+};
 
 // On enregistre les fichiers 
 const storage = multer.diskStorage({

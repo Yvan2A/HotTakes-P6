@@ -1,3 +1,4 @@
+//importation du package jsonwebtoken pour générer les tokens
 const jwt = require("jsonwebtoken")
 
 function authenticateUser(req, res, next) {

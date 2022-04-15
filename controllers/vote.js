@@ -1,10 +1,10 @@
-const {getSaute, sendClientResponse} = require("./HotTakes")
+const {getSauce, sendClientResponse} = require("./sauces")
 
-function likeSaute(req, res) {
+function likeSauce(req, res) {
   const { like, userId } = req.body
   if (![1, -1, 0].includes(like)) return res.status(403).send({ message: "Invalid like value" })
 
-  getSaute(req, res)
+  getSauce(req, res)
     .then((product) => updateVote(product, like, userId, res))
     .then((pr) => pr.save())
     .then((prod) => sendClientResponse(prod, res))
@@ -46,4 +46,4 @@ function incrementVote(product, userId, like) {
   return product
 }
 
-module.exports = {likeSaute}
+module.exports = {likeSauce}

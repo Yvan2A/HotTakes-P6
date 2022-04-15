@@ -1,40 +1,24 @@
-const mongoose = require("mongoose")
 const { unlink } = require("fs/promises")
-const {likeSaute} = require("./vote")
+const {likeSauce} = require("./vote")
 
-const productSchema = new mongoose.Schema({
-  userId: String,
-  name: String,
-  manufacturer: String,
-  description: String,
-  mainPepper: String,
-  imageUrl: String,
-  heat: { type: Number, min: 1, max: 5 },
-  likes: Number,
-  dislikes: Number,
-  usersLiked: [String],
-  usersDisliked: [String]
-})
-const Product = mongoose.model("Product", productSchema)
-
-function getSautes(req, res) {
+function getSauces(req, res) {
   Product.find({})
     .then((products) => res.send(products))
     .catch((error) => res.status(500).send(error))
 }
 
-function getSaute(req, res) {
+function getSauce(req, res) {
   const { id } = req.params
   return Product.findById(id)
 }
 
-function getSauteById(req, res) {
-  getSaute(req, res)
+function getSauceById(req, res) {
+  getSauce(req, res)
     .then((product) => sendClientResponse(product, res))
     .catch((err) => res.status(500).send(err))
 }
 // Suppression d'un produit
-function deleteSaute(req, res) {
+function deleteSauce(req, res) {
   const { id } = req.params
   Product.findByIdAndDelete(id)
     .then((product) => sendClientResponse(product, res))
@@ -43,7 +27,7 @@ function deleteSaute(req, res) {
     .catch((err) => res.status(500).send({ message: err }))
 }
 // Modification d'un produit
-function modifySaute(req, res) {
+function modifySauce(req, res) {
   const {
     params: { id }
   } = req
@@ -68,7 +52,7 @@ function deleteImage(product) {
 function makePayload(hasNewImage, req) {
   console.log("hasNewImage:", hasNewImage)
   if (!hasNewImage) return req.body
-  const payload = JSON.parse(req.body.saute)
+  const payload = JSON.parse(req.body.Sauce)
   payload.imageUrl = makeImageUrl(req, req.file.fileName)
   console.log("NOUVELLE IMAGE A GERER")
   console.log("voici le payload:", payload)
@@ -87,11 +71,11 @@ function sendClientResponse(product, res) {
 function makeImageUrl(req, fileName) {
   return req.protocol + "://" + req.get("host") + "/images/" + fileName
 }
-function createSaute(req, res) {
+function createSauce(req, res) {
   const { body, file } = req
   const { fileName } = file
-  const saute = JSON.parse(body.saute)
-  const { name, manufacturer, description, mainPepper, heat, userId } = saute
+  const Sauce = JSON.parse(body.Sauce)
+  const { name, manufacturer, description, mainPepper, heat, userId } = Sauce
 
   const product = new Product({
     userId: userId,
@@ -112,6 +96,4 @@ function createSaute(req, res) {
     .catch((err) => res.status(500).send(err))
 }
 
-
-
-module.exports = { sendClientResponse, getSaute, getSautes, createSaute, getSauteById, deleteSaute, modifySaute, likeSaute }
+module.exports = { sendClientResponse, getSauce, getSauces, createSauce, getSauceById, deleteSauce, modifySauce, likeSauce }
