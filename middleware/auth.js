@@ -1,19 +1,33 @@
-//importation du package jsonwebtoken pour générer les tokens
-const jwt = require("jsonwebtoken")
+/*Le fichier "auth.js" définit le middleware de validation des tokens envoyés à travers les requêtes.*/
 
-function authenticateUser(req, res, next) {
-  console.log("authenticate user")
-  const header = req.header("Authorization")
-  if (header == null) return res.status(403).send({ message: "Invalid" })
+//Importation du package "jsonwebtoken".
+const jwt = require('jsonwebtoken');
 
-  const token = header.split(" ")[1]
-  if (token == null) return res.status(403).send({ message: "Token cannot be null" })
+//Exportation d'un middleware classique.
+module.exports = (req, res, next) => {
+    //Bloc try/catch pour la gestion des erreurs.
+    try {
+        if (req.headers.authorization === undefined) {
+            throw 'Les headers d\'autorisation sont absents';
+        }
+        //récupération du token dans le header de la requête.
+        const token = req.headers.authorization.split(' ')[1];
 
-  jwt.verify(token, process.env.JWT_PASSWORD, (err, decoded) => {
-    if (err) return res.status(403).send({ message: "Token invalid " + err })
-    console.log("Le token est bien valide, on continue")
-    next()
-  })
+        //décodage du token en objet js.
+        const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET_KEY);
+
+        //Extraction du "userId" dans le token décodé.
+        const userId = decodedToken.userId;
+        req.auth = { userId };
+        /*Si le "userId" de la requête et du token ne correspondent pas alors la requête est "non autorisée". */
+        if(req.body.userId && req.body.userId !== userId) {
+            throw 'User ID non valide';
+        } else {
+            //Si les "userId" correspondent.
+            next();
+        }
+    //Erreur d'authentification (code 401).
+    } catch (error){
+        res.status(401).json({ error: error || 'Requête non authentifiée'});
+    }
 }
-
-module.exports = { authenticateUser }
