@@ -12,6 +12,9 @@ const path = require('path');
 //Importation du package "helmet" pour sécuriser l'application contre certaines vulnérabilités.
 const helmet = require('helmet');
 
+//Importation du package "express-mongo-sanitize" pour sécuriser les données de la BDD
+const mongoSanitize = require('express-mongo-sanitize');
+
 //Chargement des variables d'environnement déclarée dans le fichier ".env".
 require("dotenv").config();
 
